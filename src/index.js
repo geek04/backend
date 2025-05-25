@@ -7,8 +7,9 @@ import connectDB from "./db/index.js";
 
 import express from "express";
 dotenv.config({path:"./env"});
-const app = express();
-connectDB()
+
+import { app } from './app.js';
+connectDB() 
 
 .then(() =>{
     app.on("error", (err) =>{
