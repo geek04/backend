@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" }); 
 import {v2 as cloudinary} from 'cloudinary';
 import fs from 'fs';
 
@@ -5,33 +7,38 @@ import fs from 'fs';
 
     // Configuration
 cloudinary.config({ 
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-        api_key: process.env.CLOUDINARY_API_KEY, 
-        api_secret: process.env.CLOUDINARY_API_SECRET
+        cloud_name: process.env.CLAUDINARY_CLOUD_NAME, 
+        api_key: process.env.CLAUDINARY_API_KEY, 
+        api_secret: process.env.CLAUDINARY_API_SECRET
     });
 // Upload function  
-const uploadOnClaudinary= async(localFilePath) => {
+const uploadOnCloudinary = async (localFilePath) => {
     try {
-        if(!localFilePath) return null
-        // Upload the file to Cloudinary
-        const response=await Claudinary.uploader.upload(LocalFilePath,{
-            resource_type: 'auto'   
-        })
-        // file has been uploaded
-        console.log('file has been uloaded',response.url);
-        return response
-    } catch (error) {
-        fs.unlink(localFilePath, (err) => {
-            if (err) {
-                console.error('Error deleting file:', err);
-            } else {
-                console.log('File deleted successfully');
-            }
+        if (!localFilePath) return null;
+
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: "auto",
         });
-        return null; // Delete the locally saved file if upload fails
 
-        
+        // console.log("File has been uploaded:", response.url);
+
+        fs.unlink(localFilePath, (err) => {
+            if (err) console.error("Error deleting file:", err);
+            else console.log("File deleted successfully");
+        });
+
+        return response;
+    } catch (error) {
+        console.error("Cloudinary Upload Error:", error); // <-- Add this
+
+        fs.unlink(localFilePath, (err) => {
+            if (err) console.error("Error deleting file:", err);
+            else console.log("File deleted successfully");
+        });
+
+        return null;
     }
-}
+};
 
-export {uploadOnClaudinary}
+
+export {uploadOnCloudinary}
