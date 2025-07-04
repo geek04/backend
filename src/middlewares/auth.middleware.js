@@ -1,5 +1,5 @@
-import { ApiError } from "../utils/apiError";
-import { asyncHandler } from "../utils/asyncHandler";
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 import jwt from "jsonwebtoken";
 import  { User } from "../models/user.model.js";
@@ -10,7 +10,7 @@ export const verifyJWT= asyncHandler(async(req, _,next)=>{
             throw new ApiError(401, "Access token is required for authentication")
         }
     
-        const decodedToken=jwt.verify(token, process.env.ACCESS_TOCKEN_SECRET)
+        const decodedToken=jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         const user= await User.findById(decodedToken?._id).select("-password -refreshToken")
         if (!user) {
             throw new ApiError(404, "User not found")
